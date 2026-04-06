@@ -1,0 +1,1256 @@
+// ★ GAS URL を貼り付けてください（デプロイ後に発行されるURL）
+// ============================================================
+const GAS_URL = typeof GAS_URL_INIT !== 'undefined' ? GAS_URL_INIT : '';
+// ============================================================
+
+const CATS=['シャツ','スーツ類','アウター','ダウン','レディース','学生服','ベビー・園児','作業・白衣','ベスト','スカート','ワンピース','コート','スポーツ','着物','和装小物','作務衣・法衣','まつり・武道','ダンス','革・毛皮','靴・バッグ','帽子','小物・その他','布団・毛布','シーツ・カバー','ぬいぐるみ','追加（後入れ）'];
+const MENU=[
+  {c:'シャツ',n:'Ｙシャツたたみ',p:510},{c:'シャツ',n:'Ｙシャツ立体',p:510},{c:'シャツ',n:'色柄シャツたたみ',p:730},{c:'シャツ',n:'色柄シャツ立体',p:730},{c:'シャツ',n:'カジュアルたたみ',p:830},{c:'シャツ',n:'カジュアル立体',p:830},{c:'シャツ',n:'のりなしYたたみ',p:510},{c:'シャツ',n:'固糊Yたたみ',p:550},{c:'シャツ',n:'ポロシャツ',p:830},{c:'シャツ',n:'Ｔシャツ',p:830},{c:'シャツ',n:'シルクシャツ',p:1210},{c:'シャツ',n:'ドレスシャツ',p:990},{c:'シャツ',n:'トレーナー',p:1080},{c:'シャツ',n:'パーカー',p:1200},{c:'シャツ',n:'パーカー(大)',p:1350},
+  {c:'スーツ類',n:'スーツ2P',p:2420},{c:'スーツ類',n:'スーツ3P',p:3300},{c:'スーツ類',n:'スーツ2P(W)',p:2530},{c:'スーツ類',n:'スーツ3P(W)',p:3410},{c:'スーツ類',n:'ジャケット',p:1470},{c:'スーツ類',n:'ジャケットＷ',p:1570},{c:'スーツ類',n:'綿麻ジャケット',p:1815},{c:'スーツ類',n:'ｶｼﾐﾔジャケット',p:2970},{c:'スーツ類',n:'礼服上下',p:2640},{c:'スーツ類',n:'礼服2Ｐ',p:2640},{c:'スーツ類',n:'礼服3Ｐ',p:3520},{c:'スーツ類',n:'礼服ベスト',p:880},{c:'スーツ類',n:'礼服ズボン',p:1045},{c:'スーツ類',n:'モーニング2P',p:3850},{c:'スーツ類',n:'モーニング3P',p:4950},
+  {c:'アウター',n:'ブルゾン',p:1540},{c:'アウター',n:'ブルゾン厚手',p:1650},{c:'アウター',n:'ブルゾン薄手',p:1320},{c:'アウター',n:'防寒ブルゾン',p:2145},{c:'アウター',n:'バイクジャケット',p:4400},{c:'アウター',n:'特殊ﾊﾞｲｸｼﾞｬｹｯﾄ',p:8800},
+  {c:'ダウン',n:'ダウンジャケット',p:3740},{c:'ダウン',n:'ダウンブルゾン',p:3740},{c:'ダウン',n:'ﾀﾞｳﾝハーフコート',p:4070},{c:'ダウン',n:'ダウンコート',p:4400},{c:'ダウン',n:'ダウンベスト',p:3025},{c:'ダウン',n:'ダウンパンツ',p:3025},{c:'ダウン',n:'ダウンフード',p:660},
+  {c:'レディース',n:'婦人スーツ2P',p:2420},{c:'レディース',n:'婦人ジャケット',p:1485},{c:'レディース',n:'ブラウス',p:880},{c:'レディース',n:'シルクブラウス',p:1760},{c:'レディース',n:'デザインブラウス',p:1595},{c:'レディース',n:'フォーマルﾜﾝﾋﾟｰｽ',p:2200},{c:'レディース',n:'礼服上着',p:1595},
+  {c:'学生服',n:'学生服上下',p:1870},{c:'学生服',n:'学生服上',p:990},{c:'学生服',n:'学生ズボン',p:880},{c:'学生服',n:'学生ブレザー',p:990},{c:'学生服',n:'学生Yシャツ',p:510},{c:'学生服',n:'女学生上下',p:1870},{c:'学生服',n:'セーラー服(冬)',p:990},
+  {c:'ベビー・園児',n:'園児上',p:730},{c:'ベビー・園児',n:'園児ズボン',p:550},{c:'ベビー・園児',n:'ベビー上',p:730},{c:'ベビー・園児',n:'ベビードレス',p:1980},{c:'ベビー・園児',n:'ベビー布団 掛け',p:2420},{c:'ベビー・園児',n:'おんぶひも',p:2420},
+  {c:'作業・白衣',n:'作業着 上',p:935},{c:'作業・白衣',n:'作業着 下',p:880},{c:'作業・白衣',n:'つなぎ',p:1760},{c:'作業・白衣',n:'白衣',p:510},{c:'作業・白衣',n:'白衣ロング',p:660},{c:'作業・白衣',n:'割烹着',p:880},
+  {c:'ベスト',n:'ベストハンガー',p:880},{c:'ベスト',n:'ニットベスト',p:880},{c:'ベスト',n:'綿入りベスト',p:1540},{c:'ベスト',n:'防寒ベスト',p:1650},
+  {c:'スカート',n:'スカート',p:950},{c:'スカート',n:'ロングスカート',p:1155},{c:'スカート',n:'ヒダスカート',p:1155},{c:'スカート',n:'プリーツスカート',p:2200},{c:'スカート',n:'フレアスカート',p:1375},
+  {c:'ワンピース',n:'ワンピース',p:1870},{c:'ワンピース',n:'ロングワンピース',p:2090},{c:'ワンピース',n:'シルクワンピース',p:3740},{c:'ワンピース',n:'ドレス',p:8800},{c:'ワンピース',n:'ウェディングドレス',p:40000},
+  {c:'コート',n:'コート',p:2420},{c:'コート',n:'ハーフコート',p:1980},{c:'コート',n:'トレンチコート',p:3025},{c:'コート',n:'ｺｰﾄ(ｶｼﾐﾔ･ｱﾝｺﾞﾗ)',p:4840},{c:'コート',n:'ダッフルコート',p:3025},{c:'コート',n:'防寒コート',p:4400},{c:'コート',n:'MaxMaraテディ',p:9000},
+  {c:'スポーツ',n:'スキージャンパー',p:1870},{c:'スポーツ',n:'ジャージ上下',p:2200},{c:'スポーツ',n:'ジャージ上',p:1155},{c:'スポーツ',n:'野球ユニホーム',p:1100},
+  {c:'着物',n:'着物',p:14850},{c:'着物',n:'振袖',p:17600},{c:'着物',n:'留袖',p:14850},{c:'着物',n:'訪問着',p:14850},{c:'着物',n:'袴',p:2750},{c:'着物',n:'長襦袢(シルク)',p:5610},{c:'着物',n:'着物(ﾎﾟﾘｴｽﾃﾙ)',p:7700},
+  {c:'和装小物',n:'帯',p:6600},{c:'和装小物',n:'袋帯',p:6600},{c:'和装小物',n:'帯揚げ',p:2420},{c:'和装小物',n:'半襟(白)',p:847},
+  {c:'作務衣・法衣',n:'法衣',p:2695},{c:'作務衣・法衣',n:'袈裟',p:3025},{c:'作務衣・法衣',n:'五条袈裟',p:4400},{c:'作務衣・法衣',n:'作務衣(上)',p:1210},{c:'作務衣・法衣',n:'作務衣(下)',p:1210},
+  {c:'まつり・武道',n:'ハッピ',p:880},{c:'まつり・武道',n:'柔道着(上)',p:1320},{c:'まつり・武道',n:'剣道着(上)',p:1320},{c:'まつり・武道',n:'剣道着 袴',p:2750},
+  {c:'ダンス',n:'ダンスジャケット',p:2200},{c:'ダンス',n:'社交ダンスドレス',p:7700},{c:'ダンス',n:'燕尾服',p:4070},{c:'ダンス',n:'ｸﾗｯｼｯｸﾁｭﾁｭ',p:2915},
+  {c:'革・毛皮',n:'革ジャンバー',p:13200},{c:'革・毛皮',n:'革ハーフコート',p:15950},{c:'革・毛皮',n:'毛皮コート',p:18000},
+  {c:'靴・バッグ',n:'メンズ革靴',p:4400},{c:'靴・バッグ',n:'レディース革靴',p:4400},{c:'靴・バッグ',n:'ロングブーツ',p:7150},{c:'靴・バッグ',n:'布バッグ大(A4)',p:10450},
+  {c:'帽子',n:'帽子',p:950},{c:'帽子',n:'キャップ',p:950},{c:'帽子',n:'ニット帽子',p:950},{c:'帽子',n:'デザイン帽子',p:1900},
+  {c:'小物・その他',n:'ネクタイ',p:730},{c:'小物・その他',n:'マフラー',p:730},{c:'小物・その他',n:'スカーフ',p:880},{c:'小物・その他',n:'手袋',p:880},
+  {c:'布団・毛布',n:'羽根布団掛けＳ',p:8250},{c:'布団・毛布',n:'羽根布団掛けＷ',p:9350},{c:'布団・毛布',n:'綿･化繊布団掛Ｓ',p:4950},{c:'布団・毛布',n:'毛布Ｓ',p:2310},{c:'布団・毛布',n:'毛布Ｗ',p:2970},
+  {c:'シーツ・カバー',n:'シーツ',p:1090},{c:'シーツ・カバー',n:'タオルケット',p:1485},{c:'シーツ・カバー',n:'ピロケース',p:730},
+  {c:'ぬいぐるみ',n:'ぬいぐるみ(小)',p:1650},{c:'ぬいぐるみ',n:'ぬいぐるみ(中)',p:4950},{c:'ぬいぐるみ',n:'ぬいぐるみ(大)',p:8250},{c:'ぬいぐるみ',n:'着ぐるみ',p:44000},
+  {c:'追加（後入れ）',n:'特殊染み抜き料',p:0},{c:'追加（後入れ）',n:'追加料金',p:0},{c:'追加（後入れ）',n:'お直し料金',p:0}
+];
+const MATS=[
+  {n:'シルク',t:'r',r:2},{n:'カシミヤ系',t:'r',r:2},{n:'アンゴラ系',t:'r',r:2},{n:'植物繊維系',t:'r',r:1.2},{n:'部分皮革',t:'r',r:1.2},{n:'ウレタンコーティング',t:'r',r:2},{n:'金属繊維',t:'r',r:1.5},{n:'プリント',t:'a',r:300},{n:'レース付き',t:'a',r:300},{n:'スパンコール',t:'a',r:300},{n:'ロング',t:'a',r:200},{n:'縮み復元加工',t:'a',r:2500},{n:'撥水加工',t:'a',r:1500},{n:'撥水加工(大)',t:'a',r:2000},{n:'嘔吐消毒処理',t:'a',r:4000},{n:'超特急仕上げ',t:'a',r:660},{n:'特のり濃く',t:'a',r:500},{n:'防虫加工',t:'a',r:600},{n:'小学生',t:'r',r:0.8},{n:'園児',t:'r',r:0.6}
+];
+const COLORS=[{h:'#1a1a1a',n:'黒'},{h:'#888',n:'グレー'},{h:'#f5f5f5',n:'白',bd:1},{h:'#c8a96e',n:'ベージュ'},{h:'#8B4513',n:'茶'},{h:'#1a3a6b',n:'紺'},{h:'#2563eb',n:'青'},{h:'#16a34a',n:'緑'},{h:'#dc2626',n:'赤'},{h:'#db2777',n:'ピンク'},{h:'#7c3aed',n:'紫'},{h:'#f59e0b',n:'黄'}];
+const PATTERNS=['無地','ストライプ','チェック','水玉','花柄','ツイード','その他'];
+const NOTES=['えり汚れ','袖口汚れ','ほつれあり','ボタン緩み','シミ要処置','毛玉あり','パール加工あり','変色リスク','水洗い不可','特殊染み抜き（後料金）'];
+const CUSTS=[
+  {n:'原 智子',t:'471-4257',t4:'4257',k:'会員',l:false},{n:'野田 英理子',t:'090-3604-3934',t4:'3934',k:'会員',l:true},
+  {n:'野坂 久子',t:'951-6185',t4:'6185',k:'一般',l:false},{n:'藤崎 美枝子',t:'473-1101',t4:'1101',k:'会員',l:false},
+  {n:'深井珠江',t:'472-7370',t4:'7370',k:'会員',l:true},{n:'近藤圭',t:'070-8305-2637',t4:'2637',k:'会員',l:true},
+  {n:'ｶﾝﾊﾞﾔｼ章二',t:'472-7475',t4:'7475',k:'一般',l:false},{n:'長田弘子',t:'093-653-0777',t4:'0777',k:'会員',l:true},
+  {n:'有田淳子',t:'472-1687',t4:'1687',k:'会員',l:true},{n:'水津由紀子',t:'090-4515-1043',t4:'1043',k:'会員',l:true},
+  {n:'平山広美',t:'581-6740',t4:'6740',k:'会員',l:true},{n:'辻川香奈',t:'090-4989-0123',t4:'0123',k:'会員',l:true},
+  {n:'坂田 康夫',t:'473-9192',t4:'9192',k:'会員',l:false},{n:'長田和也',t:'090-3415-3725',t4:'3725',k:'会員',l:true},
+  {n:'木村美紀',t:'090-2587-7577',t4:'7577',k:'会員',l:false},{n:'末次弘子',t:'090-5381-5471',t4:'5471',k:'一般',l:false},
+  {n:'杉山智恵美',t:'473-9136',t4:'9136',k:'会員',l:false},{n:'中島由美子',t:'471-5765',t4:'5765',k:'会員',l:false},
+  {n:'松田八重子',t:'473-1079',t4:'1079',k:'一般',l:false},{n:'児玉克子',t:'371-0011',t4:'0011',k:'会員',l:false}
+];
+
+// ─── State ───────────────────────────────────────────────────
+let selCat=CATS[0], cart=[], selColor='', selPat='', selNotes=[], orders=[], mfilt='all', popItem=null, popMats=[];
+let isLoading=false, popCourse='normal', popColor='', popPat='', popNotes=[];
+let lastSelectedDate=''; // 最後に選んだ仕上がり日（次の品物のデフォルト）
+let printerType=localStorage.getItem('fc-printer')||'inkjet'; // プリンタータイプ
+let currentOrder=null; // 現在の受付票データ
+
+function setPrinterType(type){
+  printerType=type;
+  localStorage.setItem('fc-printer',type);
+  ['inkjet','thermal58','thermal80'].forEach(t=>{
+    const btn=document.getElementById('pt-'+t);
+    if(!btn)return;
+    const active=t===type;
+    btn.style.background=active?'var(--g)':'#fff';
+    btn.style.color=active?'#fff':'var(--tx2)';
+    btn.style.borderColor=active?'var(--g)':'var(--bd)';
+    btn.style.fontWeight=active?'500':'400';
+  });
+}
+
+// ─── ポップアップ内カスタムカレンダー ───────────────────
+let popCalYear=new Date().getFullYear(), popCalMonth=new Date().getMonth();
+
+function togglePopCal(){
+  const w=document.getElementById('pop-cal-wrap');
+  if(!w)return;
+  if(w.style.display==='none'){
+    renderPopCal();
+    w.style.display='block';
+  } else {
+    w.style.display='none';
+  }
+}
+
+function popCalChgMonth(d){
+  popCalMonth+=d;
+  if(popCalMonth>11){popCalMonth=0;popCalYear++;}
+  if(popCalMonth<0){popCalMonth=11;popCalYear--;}
+  renderPopCal();
+}
+
+function renderPopCal(){
+  const el=document.getElementById('pop-cal-month');
+  if(el) el.textContent=popCalYear+'年'+(popCalMonth+1)+'月';
+
+  const grid=document.getElementById('pop-cal-grid');
+  if(!grid)return;
+
+  const target=parseInt(localStorage.getItem('fc-target')||'70');
+  const today=new Date();
+  const todayStr=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
+  const selStr=document.getElementById('pop-date')?.value||'';
+
+  const firstDay=new Date(popCalYear,popCalMonth,1).getDay();
+  const lastDate=new Date(popCalYear,popCalMonth+1,0).getDate();
+
+  let cells='';
+
+  // 空白セル
+  for(let i=0;i<firstDay;i++){
+    cells+='<div style="min-height:44px;border-right:.5px solid var(--bd);border-bottom:.5px solid var(--bd);"></div>';
+  }
+
+  for(let d=1;d<=lastDate;d++){
+    const dateStr=popCalYear+'-'+String(popCalMonth+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const cnt=dailyLog[dateStr]||0;
+    const col=(firstDay+d-1)%7;
+    const isToday=dateStr===todayStr;
+    const isSel=dateStr===selStr;
+    const isSun=col===0;
+    const isSat=col===6;
+    const isPast=dateStr<todayStr;
+
+    // 平準化カレンダーと同じ色判定
+    let bg='#fff', textCol=isSun?'#E24B4A':isSat?'#378ADD':'var(--tx)';
+    if(cnt>=target){ bg='#FCEBEB'; }
+    else if(cnt>=target-10){ bg='#FAEEDA'; }
+    else if(cnt>0){ bg='#E1F5EE'; }
+
+    // 選択中は緑枠
+    const selStyle=isSel?'box-shadow:0 0 0 2px var(--g) inset;font-weight:500;':'';
+    // 過去日はグレー
+    const pastStyle=isPast?'opacity:.4;':'cursor:pointer;';
+
+    const clickFn=isPast?'':` onclick="selectPopDate('${dateStr}')"`;
+
+    cells+=`<div style="min-height:44px;border-right:.5px solid var(--bd);border-bottom:.5px solid var(--bd);padding:3px;background:${isSel?'var(--gl)':bg};${selStyle}${pastStyle}"${clickFn}>
+      <div style="font-size:11px;color:${isSel?'var(--gd)':textCol};margin-bottom:1px;">${d}</div>
+      ${cnt>0?`<div style="font-size:9px;font-weight:500;color:${cnt>=target?'#A32D2D':cnt>=target-10?'#854F0B':'#0F6E56'};text-align:center;">${cnt}</div>`:''}
+    </div>`;
+  }
+
+  // 末尾空白
+  const rem=(firstDay+lastDate)%7;
+  if(rem>0){for(let i=rem;i<7;i++) cells+='<div style="min-height:44px;border-right:.5px solid var(--bd);border-bottom:.5px solid var(--bd);"></div>';}
+
+  grid.innerHTML=cells;
+}
+
+function selectPopDate(dateStr){
+  lastSelectedDate=dateStr; // 次の品物のデフォルト日付として記憶
+  document.getElementById('pop-date').value=dateStr;
+  // 表示ラベルを更新
+  const lbl=document.getElementById('pop-date-label');
+  if(lbl){
+    const d=new Date(dateStr+'T00:00:00');
+    lbl.textContent=`${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`;
+    lbl.style.color='var(--tx)';
+  }
+  // カレンダーを再描画（選択状態を反映）
+  renderPopCal();
+  // カレンダーを閉じる
+  setTimeout(()=>{
+    const w=document.getElementById('pop-cal-wrap');
+    if(w) w.style.display='none';
+  }, 200);
+}
+
+function setPopCourse(c){
+  popCourse=c;
+  ['normal','urgent','slow'].forEach(x=>{
+    const btn=document.getElementById('pc-'+x);
+    if(!btn)return;
+    btn.style.background=x===c?'var(--g)':'#fff';
+    btn.style.color=x===c?'#fff':'var(--tx2)';
+    btn.style.fontWeight=x===c?'500':'400';
+  });
+  const dr=document.getElementById('pop-date-row');
+  if(dr)dr.style.display=c==='slow'?'none':'block';
+  if(c==='slow'){const cw=document.getElementById('pop-cal-wrap');if(cw)cw.style.display='none';}
+}
+
+function toggleUrgent(i){
+  const cur=cart[i].course||'normal';
+  cart[i].course=cur==='urgent'?'normal':'urgent';
+  renderCart();
+}
+
+// ─── GAS API ─────────────────────────────────────────────────
+// GAS_URLが★のままの場合はlocalStorageフォールバック
+function isGasConfigured(){return GAS_URL&&!GAS_URL.includes('★');}
+
+// 受注一覧取得
+async function apiLoad(showLoad=false){
+  if(!isGasConfigured()){loadLocal();return;}
+  if(showLoad)showSpinner(true);
+  try{
+    const r=await fetch(GAS_URL,{method:'GET',redirect:'follow'});
+    const d=await r.json();
+    if(d.ok){orders=d.orders||[];}
+  }catch(e){console.warn('GAS取得失敗、localStorageフォールバック',e);loadLocal();}
+  if(showLoad)showSpinner(false);
+}
+
+// 新規受付登録
+async function apiCreate(payload){
+  if(!isGasConfigured()){
+    const rno='FC-'+String(Date.now()).slice(-4);
+    const o={...payload,id:rno,status:'waiting',datetime:new Date().toLocaleString('ja')};
+    orders.unshift(o);saveLocal();return o;
+  }
+  showSpinner(true,'送信中...');
+  try{
+    const r=await fetch(GAS_URL,{method:'POST',redirect:'follow',
+      headers:{'Content-Type':'text/plain'},
+      body:JSON.stringify({action:'create',...payload})});
+    const d=await r.json();
+    showSpinner(false);
+    if(d.ok){
+      const o={...payload,id:d.id,status:'waiting',datetime:d.datetime};
+      orders.unshift(o);return o;
+    }
+    throw new Error(d.error||'エラー');
+  }catch(e){showSpinner(false);alert('送信エラー: '+e.message);throw e;}
+}
+
+// ステータス更新
+async function apiAdvance(id){
+  const o=orders.find(x=>x.id===id);
+  if(!o)return;
+  const next={waiting:'working',working:'done'}[o.status];
+  if(!next)return;
+  o.status=next; // 楽観的更新
+  renderFac();renderMgmt();renderCallQ();renderCustDone();
+  if(!isGasConfigured()){saveLocal();return;}
+  try{
+    const r=await fetch(GAS_URL,{method:'POST',redirect:'follow',
+      headers:{'Content-Type':'text/plain'},
+      body:JSON.stringify({action:'advance',id})});
+    const d=await r.json();
+    if(!d.ok)throw new Error(d.error);
+  }catch(e){alert('更新エラー: '+e.message);}
+}
+
+// localStorageフォールバック
+function saveLocal(){try{localStorage.setItem('fcv6',JSON.stringify(orders));}catch(e){}}
+function loadLocal(){try{const r=localStorage.getItem('fcv6');if(r)orders=JSON.parse(r);}catch(e){}}
+
+// ─── スピナー表示 ────────────────────────────────────────────
+function showSpinner(show, msg){
+  let el=document.getElementById('spinner');
+  if(!el){el=document.createElement('div');el.id='spinner';el.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;z-index:999;';el.innerHTML='<div style="background:#fff;border-radius:14px;padding:20px 30px;text-align:center;"><div style="font-size:28px;animation:spin 1s linear infinite;display:inline-block;">⏳</div><div style="margin-top:8px;font-size:13px;color:#333;" id="spin-msg">処理中...</div></div>';document.body.appendChild(el);const s=document.createElement('style');s.textContent='@keyframes spin{to{transform:rotate(360deg)}}';document.head.appendChild(s);}
+  el.style.display=show?'flex':'none';
+  if(msg)document.getElementById('spin-msg').textContent=msg;
+}
+
+// ─── GAS接続状態バッジ ──────────────────────────────────────
+function renderConnBadge(){
+  const isConn=isGasConfigured();
+  let el=document.getElementById('conn-badge');
+  if(!el){el=document.createElement('div');el.id='conn-badge';el.style.cssText='position:fixed;top:8px;right:10px;font-size:10px;padding:3px 8px;border-radius:999px;z-index:100;';document.body.appendChild(el);}
+  el.textContent=isConn?'🟢 SS連携中':'🟡 ローカル';
+  el.style.background=isConn?'#E1F5EE':'#FAEEDA';
+  el.style.color=isConn?'#0F6E56':'#854F0B';
+}
+
+// ─── UI構築 ──────────────────────────────────────────────────
+function build(){
+  document.getElementById('ctabs').innerHTML=CATS.map(c=>`<button class="ctab${c===selCat?' sel':''}" onclick="selCat2('${c.replace(/'/g,"\\'")}')">${c}</button>`).join('');
+  renderItems();
+
+  document.getElementById('matpills').innerHTML=MATS.map(m=>`<button class="pill" id="pm-${m.n.replace(/\s/g,'')}" onclick="toggleMat('${m.n}')">${m.n}${m.t==='r'?'(×'+m.r+')':'+¥'+m.r.toLocaleString()}</button>`).join('');
+
+  renderConnBadge();
+}
+
+function selCat2(c){selCat=c;document.querySelectorAll('.ctab').forEach(el=>el.classList.toggle('sel',el.textContent.trim()===c));renderItems();}
+function renderItems(){
+  document.getElementById('ilist').innerHTML=MENU.filter(m=>m.c===selCat).map(m=>{
+    const cnt=cart.filter(ci=>ci.n===m.n).reduce((s,ci)=>s+ci.q,0);
+    return`<div class="irow${cnt>0?' inC':''}" onclick="openPop(${JSON.stringify({n:m.n,p:m.p}).replace(/"/g,'&quot;')})"><div class="iname">${m.n}</div>${cnt>0?`<span class="ibadge">${cnt}</span>`:''}<div class="iprice">¥${m.p.toLocaleString()}</div></div>`;
+  }).join('');
+}
+function openPop(item){
+  popItem=item;popMats=[];popCourse='normal';popColor='';popPat='';popNotes=[];
+  document.getElementById('piname').textContent=item.n;
+  document.getElementById('pibase').textContent='基本価格 ¥'+item.p.toLocaleString();
+  document.querySelectorAll('#matpills .pill').forEach(el=>el.classList.remove('sa'));
+  // 色ドット
+  document.getElementById('pop-cdots').innerHTML=COLORS.map(c=>`<div class="cdot" id="pcd-${c.n}" onclick="popPickColor('${c.n}')" style="background:${c.h};${c.bd?'border:.5px solid #ccc;':''}"><span class="clbl">${c.n}</span></div>`).join('');
+  // 柄ピル
+  document.getElementById('pop-ppills').innerHTML=PATTERNS.map(p=>`<button class="pill" id="ppp-${p}" onclick="popPickPat('${p}')">${p}</button>`).join('');
+  // 特記ピル
+  document.getElementById('pop-npills').innerHTML=NOTES.map(n=>`<button class="pill" id="ppn-${n.replace(/\s/g,'')}" onclick="popToggleNote('${n}')">${n}</button>`).join('');
+  document.getElementById('pop-note').value='';
+  // カレンダーを今月に初期化
+  const now=new Date();
+  popCalYear=now.getFullYear();popCalMonth=now.getMonth();
+  // 前回の品物で選んだ日付をデフォルトとして使用
+  const globalDate=lastSelectedDate||'';
+  document.getElementById('pop-date').value=globalDate;
+  // 表示ラベルを更新
+  const lbl=document.getElementById('pop-date-label');
+  if(lbl&&globalDate){
+    const gd=new Date(globalDate+'T00:00:00');
+    lbl.textContent=`${gd.getFullYear()}年${gd.getMonth()+1}月${gd.getDate()}日`;
+    lbl.style.color='var(--tx)';
+    popCalYear=gd.getFullYear();popCalMonth=gd.getMonth();
+  } else if(lbl){
+    lbl.textContent='日付を選択';lbl.style.color='var(--tx2)';
+  }
+  // カレンダーを閉じておく
+  const cw=document.getElementById('pop-cal-wrap');
+  if(cw) cw.style.display='none';
+  setPopCourse('normal');
+  calcPop();
+  document.getElementById('popwrap').style.display='flex';
+}
+function popPickColor(n){popColor=popColor===n?'':n;document.querySelectorAll('#pop-cdots .cdot').forEach(el=>el.classList.remove('sel'));if(popColor)document.getElementById('pcd-'+n)?.classList.add('sel');}
+function popPickPat(p){popPat=popPat===p?'':p;document.querySelectorAll('#pop-ppills .pill').forEach(el=>el.classList.remove('sg'));if(popPat)document.getElementById('ppp-'+p)?.classList.add('sg');}
+function popToggleNote(n){const i=popNotes.indexOf(n);i===-1?popNotes.push(n):popNotes.splice(i,1);document.getElementById('ppn-'+n.replace(/\s/g,''))?.classList.toggle('sa',popNotes.includes(n));}
+function closePopup(){document.getElementById('popwrap').style.display='none';}
+function toggleMat(n){const i=popMats.indexOf(n);i===-1?popMats.push(n):popMats.splice(i,1);document.getElementById('pm-'+n.replace(/\s/g,''))?.classList.toggle('sa',popMats.includes(n));calcPop();}
+function calcPop(){if(!popItem)return;let p=popItem.p;const rm=popMats.map(n=>MATS.find(m=>m.n===n)).filter(m=>m&&m.t==='r');const am=popMats.map(n=>MATS.find(m=>m.n===n)).filter(m=>m&&m.t==='a');if(rm.length)p=Math.round(p*Math.max(...rm.map(m=>m.r)));am.forEach(m=>{p+=m.r;});document.getElementById('pcprice').textContent='¥'+p.toLocaleString();const ns=[...rm.map(m=>m.n),...am.map(m=>m.n+'+¥'+m.r.toLocaleString())];document.getElementById('pcnote').textContent=ns.length?ns.join(' / '):'オプションなし';}
+function addCart(){
+  if(!popItem)return;
+  let p=popItem.p;
+  const rm=popMats.map(n=>MATS.find(m=>m.n===n)).filter(m=>m&&m.t==='r');
+  const am=popMats.map(n=>MATS.find(m=>m.n===n)).filter(m=>m&&m.t==='a');
+  if(rm.length)p=Math.round(p*Math.max(...rm.map(m=>m.r)));
+  am.forEach(m=>{p+=m.r;});
+  const popDateVal=popCourse==='slow'?'':(document.getElementById('pop-date').value||'');
+  if(popDateVal) lastSelectedDate=popDateVal; // 日付を記憶
+  const popNoteVal=document.getElementById('pop-note').value.trim();
+  const allNotes=[...popNotes,...(popNoteVal?[popNoteVal]:[])];
+  cart.push({
+    n:popItem.n, mats:[...popMats], p, q:1, course:popCourse,
+    color:popColor, pat:popPat, notes:allNotes, date:popDateVal
+  });
+  closePopup();renderCart();renderItems();
+}
+function chgQ(i,d){cart[i].q+=d;if(cart[i].q<=0)cart.splice(i,1);renderCart();renderItems();}
+function renderCart(){
+  const box=document.getElementById('cbox');
+  if(!cart.length){box.innerHTML='<div class="crow" style="justify-content:center;color:var(--tx2);">品物を選んでください</div>';document.getElementById('totdisp').textContent='¥0';document.getElementById('sbtn').disabled=true;return;}
+  let tot=0;
+  const courseLabel={normal:'',urgent:'⚡急ぎ',slow:'🐢ゆっくり'};
+  const courseBg={normal:'',urgent:'#FCEBEB',slow:'#E1F5EE'};
+  const courseTc={normal:'',urgent:'#A32D2D',slow:'#0F6E56'};
+  box.innerHTML=cart.map((ci,i)=>{
+    const sub=ci.p*ci.q;tot+=sub;
+    const c=ci.course||'normal';
+    const courseTag=c!=='normal'?`<span style="font-size:9px;background:${courseBg[c]};color:${courseTc[c]};padding:1px 6px;border-radius:3px;margin-right:3px;font-weight:500;">${courseLabel[c]}</span>`:'';
+    const colorInfo=[ci.color||'',ci.pat||'',(ci.notes||[]).join('・')].filter(Boolean).join('　');
+    const dateInfo=c!=='slow'&&ci.date?`<span style="font-size:10px;color:#185FA5;">📅 ${ci.date}</span>`:'';
+    return`<div class="crow" style="flex-wrap:wrap;">
+      <div class="cn2" style="min-width:0;flex:1;">
+        <div class="cn2name">${courseTag}${ci.n}</div>
+        ${ci.mats&&ci.mats.length?`<div class="cn2opt">素材：${ci.mats.join('・')}</div>`:''}
+        ${colorInfo?`<div class="cn2opt" style="color:var(--gd);">🎨 ${colorInfo}</div>`:''}
+        ${dateInfo?`<div class="cn2opt">${dateInfo}</div>`:''}
+      </div>
+      <div class="qc">
+        <button class="qb" onclick="chgQ(${i},-1)">−</button>
+        <span class="qn">${ci.q}</span>
+        <button class="qb" onclick="chgQ(${i},1)">＋</button>
+      </div>
+      <span class="cp">¥${sub.toLocaleString()}</span>
+    </div>`;
+  }).join('');
+  document.getElementById('totdisp').textContent='¥'+tot.toLocaleString();
+  document.getElementById('sbtn').disabled=false;
+}
+function onName(el){el.classList.toggle('ok',el.value.trim().length>0);const q=el.value.trim(),box=document.getElementById('name-sbox');if(q.length<1){box.style.display='none';return;}const hits=CUSTS.filter(c=>c.n.includes(q)).slice(0,5);if(!hits.length){box.style.display='none';return;}box.innerHTML=hits.map(c=>`<div class="srow2" onclick="fill('${c.n.replace(/'/g,"\\'")}','${c.t}')"><div class="sn">${c.n}</div><div class="st">${c.t}</div>${c.l?'<span class="sbadge sline">📱</span>':''}${c.k==='会員'?'<span class="sbadge smem">会員</span>':''}</div>`).join('');box.style.display='block';}
+function onTel(el){el.classList.toggle('ok',el.value.trim().length>0);const q=el.value.replace(/\D/g,'').slice(-4),box=document.getElementById('tel-sbox');if(q.length<4){box.style.display='none';return;}const hits=CUSTS.filter(c=>c.t4===q).slice(0,5);if(!hits.length){box.style.display='none';return;}box.innerHTML=hits.map(c=>`<div class="srow2" onclick="fill('${c.n.replace(/'/g,"\\'")}','${c.t}')"><div class="sn">${c.n}</div><div class="st">${c.t}</div>${c.l?'<span class="sbadge sline">📱</span>':''}${c.k==='会員'?'<span class="sbadge smem">会員</span>':''}</div>`).join('');box.style.display='block';}
+function fill(n,t){document.getElementById('inp-name').value=n;document.getElementById('inp-tel').value=t;document.getElementById('inp-name').classList.add('ok');document.getElementById('inp-tel').classList.add('ok');document.getElementById('name-sbox').style.display='none';document.getElementById('tel-sbox').style.display='none';}
+function pickColor(n){selColor=selColor===n?'':n;document.querySelectorAll('.cdot').forEach(el=>el.classList.remove('sel'));if(selColor)document.getElementById('cd-'+n)?.classList.add('sel');}
+function pickPat(p){selPat=selPat===p?'':p;document.querySelectorAll('#ppills .pill').forEach(el=>el.classList.remove('sg'));if(selPat)document.getElementById('pp-'+p)?.classList.add('sg');}
+function toggleNote(n){const i=selNotes.indexOf(n);i===-1?selNotes.push(n):selNotes.splice(i,1);document.getElementById('np-'+n.replace(/\s/g,''))?.classList.toggle('sa',selNotes.includes(n));}
+
+// ─── LINE送信 ────────────────────────────────────────────
+async function sendLine(){
+  const o=currentOrder;
+  if(!o){alert('受付票が見つかりません');return;}
+  if(!isGasConfigured()){alert('GAS未接続');return;}
+
+  const courseLabel={normal:'通常',urgent:'急ぎ',slow:'ゆっくり'};
+  const itemLines=(o.items||[]).map(ci=>{
+    const c=ci.course||'normal';
+    const colorInfo=[ci.color||'',ci.pat||'',(ci.notes||[]).join('・')].filter(Boolean).join('・');
+    const dateInfo=c!=='slow'&&ci.date?' 仕上:'+ci.date:'';
+    return'▪ '+ci.n+' x'+ci.q+' ['+courseLabel[c]+']'+(colorInfo?' '+colorInfo:'')+dateInfo+' ¥'+(ci.p*ci.q).toLocaleString();
+  }).join('\n');
+
+  const lines=[
+    '【ファミリークリーニング】',
+    'お預かり伝票',
+    '',
+    '受付番号：'+o.id,
+    o.datetime||'',
+    '',
+    '────────────',
+    itemLines,
+    '────────────',
+    '合計（税込）：¥'+o.total.toLocaleString(),
+    '',
+    '仕上がりましたらご連絡いたします。',
+    'TEL 093-471-3190',
+    'https://lin.ee/2MSc9zX'
+  ];
+  const msg=lines.join('\n');
+
+  showSpinner(true,'LINE送信中...');
+  try{
+    const r=await fetch(GAS_URL,{method:'POST',redirect:'follow',
+      headers:{'Content-Type':'text/plain'},
+      body:JSON.stringify({action:'send_line',tel:o.tel,name:o.name,message:msg,orderId:o.id})});
+    const d=await r.json();
+    showSpinner(false);
+    if(d.ok){
+      alert('LINE送信しました！');
+    } else {
+      alert('送信失敗: '+d.error);
+    }
+  }catch(e){showSpinner(false);alert('エラー: '+e.message);}
+}
+
+
+// ─── 会計・レジ機能 ──────────────────────────────────────
+let paymentMethod='cash'; // 決済方法
+let registerPayload=null; // 会計画面に持ち込むpayload
+
+function goToRegister(){
+  const nm=document.getElementById('inp-name').value.trim();
+  if(!nm){alert('お名前を入力してください');return;}
+  if(!cart.length){alert('品物を選んでください');return;}
+  const isL=CUSTS.find(c=>c.n===nm)?.l||false;
+  const tot=cart.reduce((s,ci)=>s+ci.p*ci.q,0);
+  const note='';
+  registerPayload={
+    name:nm,
+    tel:document.getElementById('inp-tel').value.trim(),
+    tel4:document.getElementById('inp-tel').value.replace(/\D/g,'').slice(-4),
+    date:lastSelectedDate||'',
+    items:cart.map(ci=>({...ci})),
+    color:'',pat:'',
+    notes:(note?[note]:[]),
+    total:tot,line:isL,
+    hasUrgent:cart.some(ci=>ci.course==='urgent'),
+    hasSlow:cart.some(ci=>ci.course==='slow')
+  };
+
+  // 会計画面を初期化して表示
+  document.getElementById('reg-total').textContent='¥'+tot.toLocaleString();
+  setPayment('cash');
+  document.getElementById('cash-input').value='';
+  document.getElementById('change-disp').textContent='－';
+  document.getElementById('change-disp').style.color='var(--tx)';
+
+  // クイック金額ボタン生成
+  const quickAmounts=calcQuickAmounts(tot);
+  document.getElementById('quick-btns').innerHTML=quickAmounts.map(a=>
+    `<button onclick="setCashAmount(${a})"
+      style="padding:6px 12px;border-radius:8px;border:.5px solid var(--bd);background:#fff;font-size:12px;cursor:pointer;">
+      ¥${a.toLocaleString()}
+    </button>`
+  ).join('');
+
+  document.getElementById('register-overlay').style.display='flex';
+}
+
+// 現金クイック金額計算（ちょうど・切り上げ1000・切り上げ5000・10000・50000）
+function calcQuickAmounts(total){
+  const amts=new Set();
+  amts.add(total); // ちょうど
+  const r1000=Math.ceil(total/1000)*1000;
+  const r5000=Math.ceil(total/5000)*5000;
+  amts.add(r1000);
+  amts.add(r5000);
+  if(r5000<10000) amts.add(10000);
+  amts.add(50000);
+  return [...amts].sort((a,b)=>a-b).filter(a=>a>=total).slice(0,5);
+}
+
+function setCashAmount(amt){
+  document.getElementById('cash-input').value=amt;
+  calcChange();
+}
+
+function setPayment(method){
+  paymentMethod=method;
+  ['cash','cashless','stores'].forEach(m=>{
+    const btn=document.getElementById('pay-'+m);
+    if(!btn)return;
+    const active=m===method;
+    btn.style.background=active?'var(--g)':'#fff';
+    btn.style.color=active?'#fff':'var(--tx2)';
+    btn.style.borderColor=active?'var(--g)':'var(--bd)';
+  });
+  document.getElementById('cash-area').style.display=method==='cash'?'block':'none';
+}
+
+function calcChange(){
+  if(!registerPayload)return;
+  const tot=registerPayload.total;
+  const paid=parseInt(document.getElementById('cash-input').value)||0;
+  const change=paid-tot;
+  const el=document.getElementById('change-disp');
+  if(paid<=0){ el.textContent='－'; el.style.color='var(--tx)'; return; }
+  if(change<0){
+    el.textContent='¥'+Math.abs(change).toLocaleString()+' 不足';
+    el.style.color='#E24B4A';
+  } else {
+    el.textContent='¥'+change.toLocaleString();
+    el.style.color='#0F6E56';
+  }
+}
+
+function closeRegister(){
+  document.getElementById('register-overlay').style.display='none';
+}
+
+// 領収証・見積り印刷
+function printReceipt(type){
+  if(!registerPayload)return;
+  var o=registerPayload;
+  var now=new Date();
+  var exp=new Date(now);exp.setDate(exp.getDate()+30);
+  var dateStr=now.getFullYear()+'年'+(now.getMonth()+1)+'月'+now.getDate()+'日';
+  var expStr=exp.getFullYear()+'年'+(exp.getMonth()+1)+'月'+exp.getDate()+'日';
+  var paid=parseInt(document.getElementById('cash-input').value)||0;
+  var change=paid-o.total;
+  var payLabel={cash:'現金',cashless:'キャッシュレス',stores:'STORES'}[paymentMethod];
+  var isRyoushu=type==='ryoushu';
+  var title=isRyoushu?'領　収　証':'お　見　積　り';
+
+  var itemRows=(o.items||[]).map(function(ci){
+    var c=ci.course||'normal';
+    var cLabel={normal:'',urgent:'【急ぎ】',slow:'【ゆっくり】'}[c];
+    var matsStr=ci.mats&&ci.mats.length?' ('+ci.mats.join('・')+')':'';
+    return '<tr><td style="padding:4px 0;font-size:11px;">'+cLabel+ci.n+matsStr+' x'+ci.q+'</td>'
+      +'<td style="padding:4px 0;font-size:11px;text-align:right;">¥'+(ci.p*ci.q).toLocaleString()+'</td></tr>';
+  }).join('');
+
+  var html='<!DOCTYPE html><html><head><meta charset="UTF-8">';
+  html+='<title></title>';
+  html+='<style>@page{margin:10mm;}*{box-sizing:border-box;margin:0;padding:0;}';
+  html+='body{font-family:"Hiragino Sans","Noto Sans JP",sans-serif;font-size:12px;padding:20px;max-width:320px;margin:0 auto;}';
+  html+='.shop{font-size:16px;font-weight:600;text-align:center;margin-bottom:2px;}';
+  html+='.shop-sub{font-size:10px;color:#666;text-align:center;margin-bottom:12px;}';
+  html+='.doc-title{font-size:20px;font-weight:500;text-align:center;letter-spacing:4px;border-bottom:2px solid #111;padding-bottom:8px;margin-bottom:12px;}';
+  html+='.customer{font-size:13px;margin-bottom:12px;}';
+  html+='.items{width:100%;border-collapse:collapse;margin-bottom:8px;}';
+  html+='.items th{font-size:10px;color:#666;border-bottom:1px solid #ddd;padding:3px 0;text-align:left;}';
+  html+='.items th:last-child{text-align:right;}';
+  html+='.total-row{display:flex;justify-content:space-between;border-top:2px solid #111;padding-top:6px;margin-top:4px;font-size:14px;font-weight:600;}';
+  html+='.date{font-size:11px;color:#666;margin-top:12px;text-align:right;}';
+  html+='.footer{font-size:10px;color:#666;text-align:center;border-top:1px solid #ddd;padding-top:8px;margin-top:12px;}';
+  html+='.seal{width:50px;height:50px;border:1px solid #111;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:#666;margin-top:8px;}';
+  html+='<\/style><\/head><body>';
+  html+='<div class="shop">ファミリークリーニング</div>';
+  html+='<div class="shop-sub">〒800-0236 北九州市小倉南区下貫2-4-21<br>TEL 093-471-3190</div>';
+  html+='<div class="doc-title">'+title+'</div>';
+  if(!isRyoushu){
+    html+='<div style="font-size:10px;color:#666;margin-bottom:6px;">有効期限：'+expStr+'まで</div>';
+  }
+  html+='<div class="customer">'+o.name+' 様　御中</div>';
+  html+='<table class="items"><thead><tr><th>品　目</th><th>金　額</th></tr></thead>';
+  html+='<tbody>'+itemRows+'</tbody></table>';
+  html+='<div class="total-row"><span>'+(isRyoushu?'合計（税込）':'お見積り合計')+'</span>';
+  html+='<span style="font-size:18px;">¥'+o.total.toLocaleString()+'</span></div>';
+  if(isRyoushu){
+    html+='<div style="font-size:11px;color:#666;margin-top:6px;text-align:right;">お支払い：'+payLabel+'</div>';
+    if(paymentMethod==='cash'&&paid>0){
+      html+='<div style="margin-top:8px;font-size:11px;color:#666;">';
+      html+='<div style="display:flex;justify-content:space-between;"><span>お預かり</span><span>¥'+paid.toLocaleString()+'</span></div>';
+      html+='<div style="display:flex;justify-content:space-between;"><span>お釣り</span><span>¥'+Math.max(0,change).toLocaleString()+'</span></div>';
+      html+='</div>';
+    }
+  }
+  html+='<div style="text-align:center;margin-top:10px;"><div class="seal">印</div></div>';
+  html+='<div class="date">'+dateStr+'</div>';
+  html+='<div class="footer">上記、'+(isRyoushu?'正に領収いたしました':'お見積りいたします')+'<br>ご利用ありがとうございます</div>';
+  html+='<\/body><\/html>';
+
+  var w=window.open('','_blank','width=380,height=600');
+  w.document.write(html);
+  w.document.close();
+  setTimeout(function(){w.print();},400);
+}
+
+function fillRec(o,isL){
+  currentOrder=o; // 現在の受付票を保存
+  // LINEボタンはLINE登録者のみ表示
+  const lineBtn=document.getElementById('line-send-btn');
+  if(lineBtn) lineBtn.style.display=isL?'block':'none';
+  // プリンタータイプを初期化
+  setPrinterType(printerType);
+  document.getElementById('ovrno').textContent=o.id;
+  document.getElementById('ovline').textContent=isL?'📱 LINEで仕上がり通知をお送りします':'';
+  document.getElementById('rpno').textContent=o.id;
+  document.getElementById('rptime').textContent=o.datetime||'';
+  document.getElementById('rpname').textContent=o.name+' 様';
+  document.getElementById('rptel').textContent=o.tel||'－';
+  document.getElementById('rpdate').textContent=o.date||'未定';
+  document.getElementById('rpcolor').textContent='（品物ごとに設定）';
+  document.getElementById('rpitems').innerHTML=(o.items||[]).map(ci=>{
+    const c=ci.course||'normal';
+    const cLabel={normal:'',urgent:'⚡急ぎ',slow:'🐢ゆっくり'}[c];
+    const colorInfo=[ci.color||'',ci.pat||'',(ci.notes||[]).join('・')].filter(Boolean).join('・');
+    const dateInfo=c!=='slow'&&ci.date?` 📅${ci.date}`:'';
+    return`<div class="rpir"><span>${cLabel?`[${cLabel}]`:''} ${ci.n}${ci.mats&&ci.mats.length?' ('+ci.mats.join('・')+')':''} ×${ci.q}${colorInfo?' 🎨'+colorInfo:''}${dateInfo}</span><span>¥${(ci.p*ci.q).toLocaleString()}</span></div>`;
+  }).join('');
+  document.getElementById('rptotal').textContent='¥'+o.total.toLocaleString();
+  document.getElementById('rprisks').innerHTML=(o.notes||[]).map(n=>`<span class="rprisk">⚠ ${n}</span>`).join('');
+}
+function doPrint(){
+  var o=currentOrder;
+  if(!o)return;
+  var data=encodeURIComponent(JSON.stringify({
+    type:'receipt',
+    printer:printerType,
+    order:o
+  }));
+  var url=GAS_URL+'?print=1&data='+data;
+  window.open(url,'_blank');
+}
+function printReceipt(type){
+  if(!registerPayload)return;
+  var paid=parseInt(document.getElementById('cash-input').value)||0;
+  var data=encodeURIComponent(JSON.stringify({
+    type:type,
+    order:registerPayload,
+    payment:paymentMethod,
+    paid:paid
+  }));
+  var url=GAS_URL+'?print=1&data='+data;
+  window.open(url,'_blank');
+}
+
+function fillRec(o,isL){
+  currentOrder=o; // 現在の受付票を保存
+  // LINEボタンはLINE登録者のみ表示
+  const lineBtn=document.getElementById('line-send-btn');
+  if(lineBtn) lineBtn.style.display=isL?'block':'none';
+  // プリンタータイプを初期化
+  setPrinterType(printerType);
+  document.getElementById('ovrno').textContent=o.id;
+  document.getElementById('ovline').textContent=isL?'📱 LINEで仕上がり通知をお送りします':'';
+  document.getElementById('rpno').textContent=o.id;
+  document.getElementById('rptime').textContent=o.datetime||'';
+  document.getElementById('rpname').textContent=o.name+' 様';
+  document.getElementById('rptel').textContent=o.tel||'－';
+  document.getElementById('rpdate').textContent=o.date||'未定';
+  document.getElementById('rpcolor').textContent='（品物ごとに設定）';
+  document.getElementById('rpitems').innerHTML=(o.items||[]).map(ci=>{
+    const c=ci.course||'normal';
+    const cLabel={normal:'',urgent:'⚡急ぎ',slow:'🐢ゆっくり'}[c];
+    const colorInfo=[ci.color||'',ci.pat||'',(ci.notes||[]).join('・')].filter(Boolean).join('・');
+    const dateInfo=c!=='slow'&&ci.date?` 📅${ci.date}`:'';
+    return`<div class="rpir"><span>${cLabel?`[${cLabel}]`:''} ${ci.n}${ci.mats&&ci.mats.length?' ('+ci.mats.join('・')+')':''} ×${ci.q}${colorInfo?' 🎨'+colorInfo:''}${dateInfo}</span><span>¥${(ci.p*ci.q).toLocaleString()}</span></div>`;
+  }).join('');
+  document.getElementById('rptotal').textContent='¥'+o.total.toLocaleString();
+  document.getElementById('rprisks').innerHTML=(o.notes||[]).map(n=>`<span class="rprisk">⚠ ${n}</span>`).join('');
+}
+function doPrint(){
+  var o=currentOrder;
+  if(!o)return;
+  var isThermal=printerType!=='inkjet';
+  var paperWidth=printerType==='thermal58'?'58mm':printerType==='thermal80'?'80mm':'210mm';
+  var fontSize=isThermal?'10px':'12px';
+  var titleSize=isThermal?'13px':'15px';
+  var amtSize=isThermal?'14px':'16px';
+  var padding=isThermal?'4px':'16px';
+  var courseLabel={normal:'',urgent:'[急ぎ]',slow:'[ゆっくり]'};
+  var itemRows=(o.items||[]).map(function(ci){
+    var c=ci.course||'normal';
+    var cl=courseLabel[c];
+    var colorInfo=[ci.color||'',ci.pat||'',(ci.notes||[]).join('・')].filter(Boolean).join('・');
+    var dateInfo=c!=='slow'&&ci.date?' 仕上:'+ci.date:'';
+    var matsStr=ci.mats&&ci.mats.length?' ('+ci.mats.join('・')+')':'';
+    var html='<div style="border-bottom:1px dashed #ddd;padding:3px 0;font-size:'+fontSize+';">';
+    html+='<div>'+cl+ci.n+matsStr+' x'+ci.q+'</div>';
+    if(colorInfo) html+='<div style="font-size:9px;color:#666;">🎨 '+colorInfo+'</div>';
+    if(dateInfo) html+='<div style="font-size:9px;color:#185FA5;">'+dateInfo+'</div>';
+    html+='<div style="text-align:right;font-weight:500;">¥'+(ci.p*ci.q).toLocaleString()+'</div>';
+    html+='</div>';
+    return html;
+  }).join('');
+  var riskTags=(o.notes||[]).map(function(n){
+    return '<span style="font-size:9px;background:#FAEEDA;padding:1px 4px;border-radius:3px;margin:1px;display:inline-block;">⚠ '+n+'</span>';
+  }).join('');
+  var pageSize=isThermal?paperWidth+' auto':'A4';
+  var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title></title>';
+  html+='<style>@page{margin:0;size:'+pageSize+';}*{box-sizing:border-box;margin:0;padding:0;}';
+  html+='body{font-family:"Hiragino Sans","Noto Sans JP",sans-serif;font-size:'+fontSize+';padding:'+padding+';'+(isThermal?'width:'+paperWidth+';':'')+ '}<\/style><\/head><body>';
+  html+='<div style="text-align:center;border-bottom:1px solid #000;padding-bottom:6px;margin-bottom:6px;">';
+  html+='<div style="font-size:'+titleSize+';font-weight:700;">ファミリークリーニング</div>';
+  html+='<div style="font-size:9px;color:#666;">〒800-0236 北九州市小倉南区下貫2-4-21<br>TEL 093-471-3190</div>';
+  html+='<div style="font-size:'+(isThermal?'18px':'22px')+';font-weight:700;color:#1D9E75;font-family:monospace;margin:4px 0;">'+o.id+'</div>';
+  html+='<div style="font-size:9px;color:#666;">'+(o.datetime||'')+'</div></div>';
+  html+='<table style="width:100%;font-size:'+fontSize+';margin-bottom:6px;">';
+  html+='<tr><td style="color:#666;width:50px;">お名前</td><td style="font-weight:500;">'+o.name+' 様</td></tr>';
+  html+='<tr><td style="color:#666;">TEL</td><td>'+(o.tel||'－')+'</td></tr></table>';
+  html+='<div style="margin-bottom:6px;">'+itemRows+'</div>';
+  if(riskTags) html+='<div style="margin-bottom:4px;">'+riskTags+'</div>';
+  html+='<div style="display:flex;justify-content:space-between;border-top:2px solid #000;padding-top:4px;font-size:'+amtSize+';font-weight:700;">';
+  html+='<span>合計（税込）</span><span style="color:#1D9E75;">¥'+o.total.toLocaleString()+'</span></div>';
+  if(isThermal) html+='<div style="text-align:center;margin:10px 0;border-top:1px dashed #ddd;padding-top:8px;font-size:9px;color:#666;">ご利用ありがとうございます</div>';
+  html+='<\/body><\/html>';
+  var w=window.open('','_blank',isThermal?'width=300,height=600':'width=600,height=800');
+  w.document.write(html);
+  w.document.close();
+  setTimeout(function(){w.print();},400);
+}
+function printReceipt(type){
+  if(!registerPayload)return;
+  var o=registerPayload;
+  var now=new Date();
+  var exp=new Date(now);exp.setDate(exp.getDate()+30);
+  var dateStr=now.getFullYear()+'年'+(now.getMonth()+1)+'月'+now.getDate()+'日';
+  var expStr=exp.getFullYear()+'年'+(exp.getMonth()+1)+'月'+exp.getDate()+'日';
+  var paid=parseInt(document.getElementById('cash-input').value)||0;
+  var change=paid-o.total;
+  var payLabel={cash:'現金',cashless:'キャッシュレス',stores:'STORES'}[paymentMethod];
+  var isRyoushu=type==='ryoushu';
+  var title=isRyoushu?'領　収　証':'お　見　積　り';
+
+  var itemRows=(o.items||[]).map(function(ci){
+    var c=ci.course||'normal';
+    var cLabel={normal:'',urgent:'【急ぎ】',slow:'【ゆっくり】'}[c];
+    var matsStr=ci.mats&&ci.mats.length?' ('+ci.mats.join('・')+')':'';
+    return '<tr><td style="padding:4px 0;font-size:11px;">'+cLabel+ci.n+matsStr+' x'+ci.q+'</td>'
+      +'<td style="padding:4px 0;font-size:11px;text-align:right;">¥'+(ci.p*ci.q).toLocaleString()+'</td></tr>';
+  }).join('');
+
+  var html='<!DOCTYPE html><html><head><meta charset="UTF-8">';
+  html+='<title></title>';
+  html+='<style>@page{margin:10mm;}*{box-sizing:border-box;margin:0;padding:0;}';
+  html+='body{font-family:"Hiragino Sans","Noto Sans JP",sans-serif;font-size:12px;padding:20px;max-width:320px;margin:0 auto;}';
+  html+='.shop{font-size:16px;font-weight:600;text-align:center;margin-bottom:2px;}';
+  html+='.shop-sub{font-size:10px;color:#666;text-align:center;margin-bottom:12px;}';
+  html+='.doc-title{font-size:20px;font-weight:500;text-align:center;letter-spacing:4px;border-bottom:2px solid #111;padding-bottom:8px;margin-bottom:12px;}';
+  html+='.customer{font-size:13px;margin-bottom:12px;}';
+  html+='.items{width:100%;border-collapse:collapse;margin-bottom:8px;}';
+  html+='.items th{font-size:10px;color:#666;border-bottom:1px solid #ddd;padding:3px 0;text-align:left;}';
+  html+='.items th:last-child{text-align:right;}';
+  html+='.total-row{display:flex;justify-content:space-between;border-top:2px solid #111;padding-top:6px;margin-top:4px;font-size:14px;font-weight:600;}';
+  html+='.date{font-size:11px;color:#666;margin-top:12px;text-align:right;}';
+  html+='.footer{font-size:10px;color:#666;text-align:center;border-top:1px solid #ddd;padding-top:8px;margin-top:12px;}';
+  html+='.seal{width:50px;height:50px;border:1px solid #111;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:10px;color:#666;margin-top:8px;}';
+  html+='<\/style><\/head><body>';
+  html+='<div class="shop">ファミリークリーニング</div>';
+  html+='<div class="shop-sub">〒800-0236 北九州市小倉南区下貫2-4-21<br>TEL 093-471-3190</div>';
+  html+='<div class="doc-title">'+title+'</div>';
+  if(!isRyoushu){
+    html+='<div style="font-size:10px;color:#666;margin-bottom:6px;">有効期限：'+expStr+'まで</div>';
+  }
+  html+='<div class="customer">'+o.name+' 様　御中</div>';
+  html+='<table class="items"><thead><tr><th>品　目</th><th>金　額</th></tr></thead>';
+  html+='<tbody>'+itemRows+'</tbody></table>';
+  html+='<div class="total-row"><span>'+(isRyoushu?'合計（税込）':'お見積り合計')+'</span>';
+  html+='<span style="font-size:18px;">¥'+o.total.toLocaleString()+'</span></div>';
+  if(isRyoushu){
+    html+='<div style="font-size:11px;color:#666;margin-top:6px;text-align:right;">お支払い：'+payLabel+'</div>';
+    if(paymentMethod==='cash'&&paid>0){
+      html+='<div style="margin-top:8px;font-size:11px;color:#666;">';
+      html+='<div style="display:flex;justify-content:space-between;"><span>お預かり</span><span>¥'+paid.toLocaleString()+'</span></div>';
+      html+='<div style="display:flex;justify-content:space-between;"><span>お釣り</span><span>¥'+Math.max(0,change).toLocaleString()+'</span></div>';
+      html+='</div>';
+    }
+  }
+  html+='<div style="text-align:center;margin-top:10px;"><div class="seal">印</div></div>';
+  html+='<div class="date">'+dateStr+'</div>';
+  html+='<div class="footer">上記、'+(isRyoushu?'正に領収いたしました':'お見積りいたします')+'<br>ご利用ありがとうございます</div>';
+  html+='<\/body><\/html>';
+
+  var w=window.open('','_blank','width=380,height=600');
+  w.document.write(html);
+  w.document.close();
+  setTimeout(function(){w.print();},400);
+}
+
+function fillRec(o,isL){
+  currentOrder=o; // 現在の受付票を保存
+  // LINEボタンはLINE登録者のみ表示
+  const lineBtn=document.getElementById('line-send-btn');
+  if(lineBtn) lineBtn.style.display=isL?'block':'none';
+  // プリンタータイプを初期化
+  setPrinterType(printerType);
+  document.getElementById('ovrno').textContent=o.id;
+  document.getElementById('ovline').textContent=isL?'📱 LINEで仕上がり通知をお送りします':'';
+  document.getElementById('rpno').textContent=o.id;
+  document.getElementById('rptime').textContent=o.datetime||'';
+  document.getElementById('rpname').textContent=o.name+' 様';
+  document.getElementById('rptel').textContent=o.tel||'－';
+  document.getElementById('rpdate').textContent=o.date||'未定';
+  document.getElementById('rpcolor').textContent='（品物ごとに設定）';
+  document.getElementById('rpitems').innerHTML=(o.items||[]).map(ci=>{
+    const c=ci.course||'normal';
+    const cLabel={normal:'',urgent:'⚡急ぎ',slow:'🐢ゆっくり'}[c];
+    const colorInfo=[ci.color||'',ci.pat||'',(ci.notes||[]).join('・')].filter(Boolean).join('・');
+    const dateInfo=c!=='slow'&&ci.date?` 📅${ci.date}`:'';
+    return`<div class="rpir"><span>${cLabel?`[${cLabel}]`:''} ${ci.n}${ci.mats&&ci.mats.length?' ('+ci.mats.join('・')+')':''} ×${ci.q}${colorInfo?' 🎨'+colorInfo:''}${dateInfo}</span><span>¥${(ci.p*ci.q).toLocaleString()}</span></div>`;
+  }).join('');
+  document.getElementById('rptotal').textContent='¥'+o.total.toLocaleString();
+  document.getElementById('rprisks').innerHTML=(o.notes||[]).map(n=>`<span class="rprisk">⚠ ${n}</span>`).join('');
+}
+function doPrint(){
+  var o=currentOrder;
+  if(!o)return;
+  var isThermal=printerType!=='inkjet';
+  var paperWidth=printerType==='thermal58'?'58mm':printerType==='thermal80'?'80mm':'210mm';
+  var fontSize=isThermal?'10px':'12px';
+  var titleSize=isThermal?'13px':'15px';
+  var amtSize=isThermal?'14px':'16px';
+  var padding=isThermal?'4px':'16px';
+  var courseLabel={normal:'',urgent:'[急ぎ]',slow:'[ゆっくり]'};
+  var itemRows=(o.items||[]).map(function(ci){
+    var c=ci.course||'normal';
+    var cl=courseLabel[c];
+    var colorInfo=[ci.color||'',ci.pat||'',(ci.notes||[]).join('・')].filter(Boolean).join('・');
+    var dateInfo=c!=='slow'&&ci.date?' 仕上:'+ci.date:'';
+    var matsStr=ci.mats&&ci.mats.length?' ('+ci.mats.join('・')+')':'';
+    var html='<div style="border-bottom:1px dashed #ddd;padding:3px 0;font-size:'+fontSize+';">';
+    html+='<div>'+cl+ci.n+matsStr+' x'+ci.q+'</div>';
+    if(colorInfo) html+='<div style="font-size:9px;color:#666;">🎨 '+colorInfo+'</div>';
+    if(dateInfo) html+='<div style="font-size:9px;color:#185FA5;">'+dateInfo+'</div>';
+    html+='<div style="text-align:right;font-weight:500;">¥'+(ci.p*ci.q).toLocaleString()+'</div>';
+    html+='</div>';
+    return html;
+  }).join('');
+  var riskTags=(o.notes||[]).map(function(n){
+    return '<span style="font-size:9px;background:#FAEEDA;padding:1px 4px;border-radius:3px;margin:1px;display:inline-block;">⚠ '+n+'</span>';
+  }).join('');
+  var pageSize=isThermal?paperWidth+' auto':'A4';
+  var html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title></title>';
+  html+='<style>@page{margin:0;size:'+pageSize+';}*{box-sizing:border-box;margin:0;padding:0;}';
+  html+='body{font-family:"Hiragino Sans","Noto Sans JP",sans-serif;font-size:'+fontSize+';padding:'+padding+';'+(isThermal?'width:'+paperWidth+';':'')+ '}<\/style><\/head><body>';
+  html+='<div style="text-align:center;border-bottom:1px solid #000;padding-bottom:6px;margin-bottom:6px;">';
+  html+='<div style="font-size:'+titleSize+';font-weight:700;">ファミリークリーニング</div>';
+  html+='<div style="font-size:9px;color:#666;">〒800-0236 北九州市小倉南区下貫2-4-21<br>TEL 093-471-3190</div>';
+  html+='<div style="font-size:'+(isThermal?'18px':'22px')+';font-weight:700;color:#1D9E75;font-family:monospace;margin:4px 0;">'+o.id+'</div>';
+  html+='<div style="font-size:9px;color:#666;">'+(o.datetime||'')+'</div></div>';
+  html+='<table style="width:100%;font-size:'+fontSize+';margin-bottom:6px;">';
+  html+='<tr><td style="color:#666;width:50px;">お名前</td><td style="font-weight:500;">'+o.name+' 様</td></tr>';
+  html+='<tr><td style="color:#666;">TEL</td><td>'+(o.tel||'－')+'</td></tr></table>';
+  html+='<div style="margin-bottom:6px;">'+itemRows+'</div>';
+  if(riskTags) html+='<div style="margin-bottom:4px;">'+riskTags+'</div>';
+  html+='<div style="display:flex;justify-content:space-between;border-top:2px solid #000;padding-top:4px;font-size:'+amtSize+';font-weight:700;">';
+  html+='<span>合計（税込）</span><span style="color:#1D9E75;">¥'+o.total.toLocaleString()+'</span></div>';
+  if(isThermal) html+='<div style="text-align:center;margin:10px 0;border-top:1px dashed #ddd;padding-top:8px;font-size:9px;color:#666;">ご利用ありがとうございます</div>';
+  html+='<\/body><\/html>';
+  var w=window.open('','_blank',isThermal?'width=300,height=600':'width=600,height=800');
+  w.document.write(html);
+  w.document.close();
+  setTimeout(function(){w.print();},400);
+}
+
+function closeOv(){document.getElementById('overlay').style.display='none';cart=[];selColor='';selPat='';selNotes=[];popColor='';popPat='';popNotes=[];popMats=[];lastSelectedDate='';const lbl=document.getElementById('pop-date-label');if(lbl){lbl.textContent='日付を選択';lbl.style.color='var(--tx2)';}['inp-name','inp-tel'].forEach(id=>{const el=document.getElementById(id);if(el){el.value='';el.classList.remove('ok');}});document.querySelectorAll('.cdot.sel,.pill.sg,.pill.sa').forEach(el=>el.classList.remove('sg','sa','sel'));renderCart();renderItems();}
+
+// ─── 保管在庫管理 ────────────────────────────────────────
+
+let washNormal=0, washSlow=0, finishCount=0;
+
+function chgFinish(d){
+  finishCount=Math.max(0,finishCount+d);
+  document.getElementById('finish-count-disp').textContent=finishCount;
+}
+
+async function submitFinishCount(){
+  const cnt=finishCount;
+  if(!cnt||cnt<=0){alert('点数を入力してください');return;}
+  const today=new Date();
+  const dateStr=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
+  if(!isGasConfigured()){alert('GAS未接続');return;}
+  showSpinner(true,'登録中...');
+  try{
+    const r=await fetch(GAS_URL,{method:'POST',redirect:'follow',
+      headers:{'Content-Type':'text/plain'},
+      body:JSON.stringify({action:'log_finish_bulk',date:dateStr,count:cnt})});
+    const d=await r.json();
+    showSpinner(false);
+    if(d.ok){
+      finishCount=0;
+      document.getElementById('finish-count-disp').textContent='0';
+      await loadStorage();
+      const el=document.getElementById('barcode-result');
+      el.textContent='✅ 仕上がり '+cnt+'点 を登録しました';
+      el.style.color='#0F6E56';
+      setTimeout(()=>{el.textContent='';},3000);
+    }
+  }catch(e){showSpinner(false);alert('エラー: '+e.message);}
+}
+
+function chgWash(type, d){
+  if(type==='normal'){
+    washNormal=Math.max(0,washNormal+d);
+    document.getElementById('wash-normal-disp').textContent=washNormal;
+  } else {
+    washSlow=Math.max(0,washSlow+d);
+    document.getElementById('wash-slow-disp').textContent=washSlow;
+  }
+}
+
+async function loadStorage(){
+  if(!isGasConfigured())return;
+  try{
+    const r=await fetch(GAS_URL+'?action=storage',{method:'GET',redirect:'follow'});
+    const d=await r.json();
+    if(d.ok){
+      document.getElementById('slow-total').textContent=d.slowTotal||0;
+      document.getElementById('today-wash').textContent=d.todayWash||0;
+      const wd=document.getElementById('today-wash-detail');
+      if(wd) wd.textContent='通常'+( d.todayWashNormal||0)+'点 / ゆっくり'+(d.todayWashSlow||0)+'点';
+      document.getElementById('today-finish').textContent=d.todayFinish||0;
+    }
+  }catch(e){console.warn('保管集計取得失敗',e);}
+
+  // 本日の受付点数をordersから集計（ローカルで計算）
+  calcTodayStats();
+}
+
+function calcTodayStats(){
+  const today=new Date();
+  const todayStr=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
+
+  let normalPts=0, slowPts=0;
+  orders.forEach(o=>{
+    // 仕上がり希望日が今日の受注を集計
+    (o.items||[]).forEach(ci=>{
+      const itemDate=(ci.date||'').slice(0,10);
+      if(itemDate!==todayStr)return;
+      const q=ci.q||1;
+      const c=ci.course||'normal';
+      if(c==='slow') slowPts+=q;
+      else normalPts+=q;
+    });
+  });
+
+  const total=normalPts+slowPts;
+  const target=parseInt(localStorage.getItem('fc-target')||'70');
+
+  const elN=document.getElementById('today-normal');
+  const elS=document.getElementById('today-slow');
+  const elT=document.getElementById('today-total');
+  const elLbl=document.getElementById('today-progress-label');
+  const elBar=document.getElementById('today-progress-bar');
+
+  if(elN) elN.textContent=normalPts;
+  if(elS) elS.textContent=slowPts;
+  if(elT) elT.textContent=total;
+  if(elLbl) elLbl.textContent=total+' / '+target+'点';
+
+  if(elBar){
+    const pct=Math.min(100, Math.round(total/target*100));
+    elBar.style.width=pct+'%';
+    elBar.style.background=pct>=100?'#E24B4A':pct>=(100-10/target*100)?'#EF9F27':'var(--g)';
+  }
+}
+
+async function submitWash(){
+  if(washNormal<=0 && washSlow<=0){alert('点数を入力してください');return;}
+  const today=new Date();
+  const dateStr=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
+  if(!isGasConfigured()){alert('GAS未接続');return;}
+  showSpinner(true,'登録中...');
+  try{
+    const r=await fetch(GAS_URL,{method:'POST',redirect:'follow',
+      headers:{'Content-Type':'text/plain'},
+      body:JSON.stringify({action:'log_wash',date:dateStr,normalCount:washNormal,slowCount:washSlow})});
+    const d=await r.json();
+    showSpinner(false);
+    if(d.ok){
+      const total=washNormal+washSlow;
+      washNormal=0; washSlow=0;
+      document.getElementById('wash-normal-disp').textContent='0';
+      document.getElementById('wash-slow-disp').textContent='0';
+      await loadStorage();
+      const el=document.getElementById('barcode-result');
+      el.textContent='🧺 洗い数 '+total+'点（通常'+d.normalCount+'点・ゆっくり'+d.slowCount+'点）を登録しました';
+      el.style.color='#185FA5';
+      setTimeout(()=>{el.textContent='';},4000);
+    }
+  }catch(e){showSpinner(false);alert('エラー: '+e.message);}
+}
+
+async function submitBarcode(){
+  const val=document.getElementById('barcode-inp').value.trim().toUpperCase();
+  if(!val){alert('バーコードを読み取るか番号を入力してください');return;}
+  const today=new Date();
+  const dateStr=today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
+  const el=document.getElementById('barcode-result');
+  if(!isGasConfigured()){alert('GAS未接続');return;}
+  try{
+    const r=await fetch(GAS_URL,{method:'POST',redirect:'follow',
+      headers:{'Content-Type':'text/plain'},
+      body:JSON.stringify({action:'log_finish',barcode:val,date:dateStr})});
+    const d=await r.json();
+    if(d.ok){
+      document.getElementById('barcode-inp').value='';
+      document.getElementById('barcode-inp').focus();
+      await loadStorage();
+      el.textContent='✅ '+val+' 仕上がり登録しました';
+      el.style.color='#0F6E56';
+      setTimeout(()=>{el.textContent='';},2000);
+    }
+  }catch(e){el.textContent='❌ エラー: '+e.message;el.style.color='#A32D2D';}
+}
+
+// ─── コース変更 ──────────────────────────────────────────
+function openCourseEdit(id){
+  const o=orders.find(x=>x.id===id);
+  if(!o)return;
+  document.getElementById('edit-order-info').textContent=o.id+' '+o.name+' 様';
+  const courseLabel={normal:'通常',urgent:'⚡ 急ぎ',slow:'🐢 ゆっくり'};
+  const courseBg={normal:'#f5f5f5',urgent:'#FCEBEB',slow:'#E1F5EE'};
+  const courseTc={normal:'var(--tx)',urgent:'#A32D2D',slow:'#0F6E56'};
+
+  document.getElementById('edit-items-list').innerHTML=(o.items||[]).map((ci,i)=>{
+    const c=ci.course||'normal';
+    return`<div style="background:#fff;border-radius:10px;border:.5px solid var(--bd);padding:10px;margin-bottom:7px;">
+      <div style="font-size:13px;font-weight:500;margin-bottom:8px;">${ci.n} ×${ci.q}</div>
+      <div style="display:flex;gap:5px;">
+        ${['normal','urgent','slow'].map(x=>`
+          <button onclick="changeCourse('${id}',${i},'${x}')"
+            style="flex:1;padding:7px;border-radius:8px;font-size:11px;font-weight:${x===c?'500':'400'};
+            cursor:pointer;border:.5px solid ${x===c?'var(--g)':'var(--bd)'};
+            background:${x===c?'var(--g)':'#fff'};
+            color:${x===c?'#fff':'var(--tx2)'};transition:all .15s;">
+            ${courseLabel[x]}
+          </button>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('course-overlay').style.display='flex';
+}
+
+async function changeCourse(id, itemIdx, newCourse){
+  const o=orders.find(x=>x.id===id);
+  if(!o||!o.items[itemIdx])return;
+  o.items[itemIdx].course=newCourse;
+
+  // GASに更新を送信
+  if(isGasConfigured()){
+    try{
+      await fetch(GAS_URL,{method:'POST',redirect:'follow',
+        headers:{'Content-Type':'text/plain'},
+        body:JSON.stringify({action:'update_items',id,items:o.items})});
+    }catch(e){console.warn('コース更新失敗',e);}
+  }
+
+  // モーダルを再描画
+  openCourseEdit(id);
+  renderMgmt();
+}
+
+async function manualReload(tab){
+  await apiLoad(true);
+  if(tab==='fac')renderFac();
+  if(tab==='mgmt'){renderMgmt();loadStorage();}
+  if(tab==='call')renderCallQ();
+  if(tab==='cust')renderCustDone();
+  if(tab==='cal'){await loadDailyCount();renderCal();}
+  if(tab==='rec'){await loadDailyCount();}
+}
+
+function advance(id){apiAdvance(id);}
+function renderFac(){const el=document.getElementById('faclist');if(!orders.length){el.innerHTML='<div class="empty">まだ受付がありません</div>';return;}const sc={waiting:'w',working:'p',done:'d'},sl={waiting:'待機中',working:'作業中',done:'完了'};el.innerHTML=orders.map(o=>`<div class="ocard ${sc[o.status]}"><div class="oname">${o.name} 様 <span style="font-size:10px;font-weight:400;color:var(--tx2);">${o.id}${o.line?' 📱':''}</span></div><div class="ometa">${(o.items||[]).map(ci=>ci.n+'×'+ci.q).join(' / ')}<br>${(o.datetime||'').slice(11,16)}受付　${o.date||'未定'}　¥${o.total.toLocaleString()}</div>${(o.notes||[]).length?`<div class="chips">${o.notes.map(n=>`<span class="chip chipr">⚠ ${n}</span>`).join('')}</div>`:''}<div class="srow3"><span class="spill">${sl[o.status]}</span>${o.status==='waiting'?`<button class="abtn" onclick="advance('${o.id}')">作業開始</button>`:''}${o.status==='working'?`<button class="abtn" onclick="advance('${o.id}')">完了にする</button>`:''}${o.status==='done'?`<span style="font-size:10px;color:var(--gd);margin-left:auto;">✓ 仕上がり済み</span>`:''}</div></div>`).join('');}
+function renderMgmt(){calcTodayStats();const w=orders.filter(o=>o.status==='waiting').length,p=orders.filter(o=>o.status==='working').length,d=orders.filter(o=>o.status==='done').length;document.getElementById('statrow').innerHTML=`<div class="stat"><div class="statn">${w}</div><div class="statl">待機中</div></div><div class="stat"><div class="statn">${p}</div><div class="statl">作業中</div></div><div class="stat"><div class="statn">${d}</div><div class="statl">完了</div></div>`;document.getElementById('filterrow').innerHTML=['all','waiting','working','done'].map(f=>`<button class="fbtn${mfilt===f?' sel':''}" onclick="setF('${f}')">${{all:'すべて',waiting:'待機',working:'作業中',done:'完了'}[f]}</button>`).join('');const list=mfilt==='all'?orders:orders.filter(o=>o.status===mfilt);if(!list.length){document.getElementById('mgmtlist').innerHTML='<div class="empty">該当なし</div>';return;}const sc={waiting:'w',working:'p',done:'d'},sl={waiting:'待機中',working:'作業中',done:'完了'};document.getElementById('mgmtlist').innerHTML=list.map(o=>`<div class="ocard ${sc[o.status]}"><div class="oname">${o.name} 様 <span style="font-size:10px;font-weight:400;color:var(--tx2);">${o.id}</span></div><div class="ometa">${(o.items||[]).map(ci=>{const c=ci.course||'normal';const cl={normal:'',urgent:'⚡',slow:'🐢'}[c];return cl+ci.n+'×'+ci.q;}).join(' / ')}　¥${o.total.toLocaleString()}</div><div class="srow3"><span class="spill">${sl[o.status]}</span><button class="abtn" onclick="openCourseEdit('${o.id}')" style="border-color:var(--bl);color:var(--bl);">コース変更</button>${o.status!=='done'?`<button class="abtn" onclick="advance('${o.id}')">${o.status==='waiting'?'作業開始':'完了にする'}</button>`:''}</div></div>`).join('');}
+function setF(f){mfilt=f;renderMgmt();}
+let callIdx=0;
+function renderCallQ(){const done=orders.filter(o=>o.status==='done'),el=document.getElementById('callqueue');if(!done.length){el.innerHTML='<div class="empty" style="padding:16px 0;">完了済みなし</div>';return;}el.innerHTML=`<div style="background:#fff;border-radius:10px;border:.5px solid var(--bd);overflow:hidden;">${done.map(o=>`<div class="crow" onclick="doCall('${o.id}')" style="cursor:pointer;"><span style="font-size:12px;font-weight:500;color:var(--g);min-width:72px;">${o.id}</span><span style="flex:1;font-size:13px;font-weight:500;">${o.name} 様${o.line?' 📱':''}</span><span style="font-size:10px;background:var(--gl);color:var(--gd);padding:2px 8px;border-radius:999px;">呼出</span></div>`).join('')}</div>`;}
+function callSearch(){const q=document.getElementById('callq').value.trim(),res=document.getElementById('callresult');if(!q){res.innerHTML='';return;}const match=o=>o.name.includes(q)||(q.replace(/\D/g,'').length===4&&o.tel4===q.replace(/\D/g,''));const hits=orders.filter(match).slice(0,5);if(!hits.length){res.innerHTML='<div style="font-size:12px;color:var(--tx2);padding:8px 0;">見つかりませんでした</div>';return;}const sl={waiting:'待機中',working:'作業中',done:'仕上がり済み'};const sc={waiting:'var(--al)',working:'var(--bll)',done:'var(--gl)'};const tc={waiting:'#854F0B',working:'#185FA5',done:'var(--gd)'};res.innerHTML=hits.map(o=>`<div class="crrow"><div class="crname">${o.name} 様${o.line?' 📱':''}</div><div class="crmeta" style="display:flex;align-items:center;gap:6px;">${o.id}　¥${o.total.toLocaleString()}　<span style="font-size:10px;padding:2px 8px;border-radius:999px;background:${sc[o.status]};color:${tc[o.status]};font-weight:500;">${sl[o.status]}</span></div><button class="crcallbtn" onclick="doCall('${o.id}')">📢 ${o.name} 様を呼び出す</button></div>`).join('');}
+function doCall(id){const o=orders.find(x=>x.id===id);if(!o)return;document.getElementById('callnm').textContent=o.name+' 様';document.getElementById('callno').textContent='受付番号：'+o.id;document.getElementById('callq').value='';document.getElementById('callresult').innerHTML='';}
+function callNext(){const done=orders.filter(o=>o.status==='done');if(!done.length){alert('完了済みの品物がありません');return;}doCall(done[callIdx++%done.length].id);}
+function searchOrder(){const q=document.getElementById('custinp').value.trim(),el=document.getElementById('custresult');
+const qu=q.toUpperCase();
+// 受付番号・名前・電話下4桁で検索
+const o=orders.find(x=>x.id===qu||x.id==='FC-'+qu.replace('FC-','')||x.name.includes(q)||(q.replace(/\D/g,'').length>=4&&x.tel4===q.replace(/\D/g,'').slice(-4)));if(!o){el.innerHTML='<div class="empty">見つかりません</div>';return;}const st=['waiting','working','done'],idx=st.indexOf(o.status),lb=['受付完了','作業中','仕上がり'];
+const courseLabel={normal:'通常',urgent:'⚡急ぎ',slow:'🐢ゆっくり'};
+const courseBg={normal:'#f5f5f5',urgent:'#FCEBEB',slow:'#E1F5EE'};
+const courseTc={normal:'var(--tx2)',urgent:'#A32D2D',slow:'#0F6E56'};
+el.innerHTML=`<div class="cushero"><div class="cusherot">お預かり状況</div><div class="cusno">${o.id}</div><div class="cusnm">${o.name} 様</div></div>
+<div class="pbar">${lb.map((l,i)=>`${i>0?`<div class="pline${i<=idx?' done':''}"></div>`:''}<div class="pstep"><div class="pdot ${i<idx?'done':i===idx?'cur':'fut'}">${i<idx?'✓':(i+1)}</div><div class="psteplbl">${l}</div></div>`).join('')}</div>
+<div style="background:#fff;border-radius:10px;border:.5px solid var(--bd);padding:11px;margin-bottom:8px;font-size:12px;">
+  <div style="margin-bottom:4px;"><span style="color:var(--tx2);">仕上がり：</span>${o.date||'未定'}</div>
+  <div style="margin-bottom:4px;"><span style="color:var(--tx2);">金額：</span><span style="color:var(--gd);font-weight:500;">¥${o.total.toLocaleString()}</span></div>
+</div>
+<div style="font-size:11px;font-weight:500;color:var(--tx2);margin-bottom:6px;">品物一覧・コース変更</div>
+${(o.items||[]).map((ci,i)=>{
+  const c=ci.course||'normal';
+  const colorInfo=[ci.color||'',ci.pat||'',(ci.notes||[]).join('・')].filter(Boolean).join('・');
+  return`<div style="background:#fff;border-radius:10px;border:.5px solid var(--bd);padding:10px;margin-bottom:6px;">
+    <div style="font-size:13px;font-weight:500;margin-bottom:4px;">${ci.n} ×${ci.q}</div>
+    ${colorInfo?`<div style="font-size:10px;color:var(--tx2);margin-bottom:6px;">🎨 ${colorInfo}</div>`:''}
+    <div style="display:flex;gap:4px;">
+      ${['normal','urgent','slow'].map(x=>`<button onclick="changeCourseFromCust('${o.id}',${i},'${x}')"
+        style="flex:1;padding:6px;border-radius:8px;font-size:11px;cursor:pointer;
+        border:.5px solid ${x===c?'var(--g)':'var(--bd)'};
+        background:${x===c?'var(--g)':'#fff'};
+        color:${x===c?'#fff':'var(--tx2)'};font-weight:${x===c?'500':'400'};">
+        ${courseLabel[x]}</button>`).join('')}
+    </div>
+  </div>`;
+}).join('')}
+${o.status==='done'?'<div style="background:var(--gl);border-radius:10px;padding:11px;text-align:center;font-size:13px;color:var(--gd);font-weight:500;">✅ 仕上がりました！店頭までお越しください</div>':''}`;}
+async function changeCourseFromCust(id, itemIdx, newCourse){
+  const o=orders.find(x=>x.id===id);
+  if(!o||!o.items[itemIdx])return;
+  o.items[itemIdx].course=newCourse;
+  if(isGasConfigured()){
+    try{
+      await fetch(GAS_URL,{method:'POST',redirect:'follow',
+        headers:{'Content-Type':'text/plain'},
+        body:JSON.stringify({action:'update_items',id,items:o.items})});
+    }catch(e){console.warn('コース更新失敗',e);}
+  }
+  // 画面を再描画
+  searchOrder();
+}
+
+function renderCustDone(){const done=orders.filter(o=>o.status==='done'),el=document.getElementById('custdone');if(!done.length){el.innerHTML='<div style="font-size:12px;color:var(--tx2);">現在なし</div>';return;}el.innerHTML=`<div style="background:#fff;border-radius:10px;border:.5px solid var(--bd);overflow:hidden;">${done.map(o=>`<div class="crow"><span style="font-size:12px;font-weight:500;color:var(--g);min-width:72px;">${o.id}</span><span style="flex:1;font-size:12px;font-weight:500;">${o.name} 様</span><span style="font-size:10px;background:var(--gl);color:var(--gd);padding:2px 8px;border-radius:999px;">引渡し待ち</span></div>`).join('')}</div>`;}
+
+async function sw(tab){
+  ['rec','fac','mgmt','call','cust','cal'].forEach(t=>{
+    document.getElementById('screen-'+t).style.display=t===tab?'block':'none';
+    document.getElementById('tb'+t).classList.toggle('active',t===tab);
+  });
+  await apiLoad(true);
+  if(tab==='fac')renderFac();
+  if(tab==='mgmt'){renderMgmt();loadStorage();}
+  if(tab==='call')renderCallQ();
+  if(tab==='cust')renderCustDone();
+  if(tab==='cal'){await loadDailyCount();renderCal();}
+}
+
+// 5秒ごとに自動リロード（工場・管理画面のみ）
+setInterval(async()=>{
+  const active=['fac','mgmt','call','cust','cal'].find(t=>document.getElementById('screen-'+t)?.style.display==='block');
+  if(!active)return;
+  await apiLoad();
+  if(active==='fac')renderFac();
+  if(active==='mgmt'){renderMgmt();loadStorage();}
+  if(active==='call')renderCallQ();
+  if(active==='cust')renderCustDone();
+  if(active==='cal'){await loadDailyCount();renderCal();}
+},5*60*1000);
+
+// ─── 平準化カレンダー ────────────────────────────────────
+let targetPt = parseInt(localStorage.getItem('fc-target')||'70');
+let calYear  = new Date().getFullYear();
+let calMonth = new Date().getMonth();
+let dailyLog = {}; // {'2026-04-01': 5, ...} お預かり点数
+
+function chgTarget(d){
+  targetPt = Math.max(10, targetPt + d);
+  document.getElementById('target-disp').textContent = targetPt;
+  localStorage.setItem('fc-target', targetPt);
+  renderCal();
+}
+
+function chgMonth(d){
+  calMonth += d;
+  if(calMonth > 11){ calMonth = 0; calYear++; }
+  if(calMonth < 0){ calMonth = 11; calYear--; }
+  renderCalHeader();
+  renderCal();
+}
+
+function renderCalHeader(){
+  const el = document.getElementById('cal-month-label');
+  if(el) el.textContent = calYear + '年' + (calMonth+1) + '月';
+}
+
+async function loadDailyCount(){
+  if(!isGasConfigured()) return;
+  try{
+    const r = await fetch(GAS_URL+'?action=daily_count', {method:'GET', redirect:'follow'});
+    const d = await r.json();
+    if(d.ok && d.daily){
+      dailyLog = d.daily;
+    }
+  } catch(e){ console.warn('日別集計取得失敗', e); }
+}
+
+function renderCal(){
+  const grid = document.getElementById('cal-grid');
+  if(!grid) return;
+  renderCalHeader();
+
+  const today = new Date();
+  const todayStr = today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0')+'-'+String(today.getDate()).padStart(2,'0');
+
+  // 月の最初と最後
+  const firstDay = new Date(calYear, calMonth, 1).getDay(); // 0=日
+  const lastDate = new Date(calYear, calMonth+1, 0).getDate();
+
+  let cells = '';
+  let monthTotal = 0;
+
+  // 空白セル
+  for(let i = 0; i < firstDay; i++){
+    cells += '<div style="min-height:56px;border-right:.5px solid var(--bd);border-bottom:.5px solid var(--bd);"></div>';
+  }
+
+  for(let d = 1; d <= lastDate; d++){
+    const dateStr = calYear+'-'+String(calMonth+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const cnt = dailyLog[dateStr] || 0;
+    monthTotal += cnt;
+    const col = (firstDay + d - 1) % 7;
+    const isToday = dateStr === todayStr;
+    const isSun = col === 0;
+    const isSat = col === 6;
+
+    // 色判定
+    let bg = '#fff', border = 'var(--bd)', textCol = '#854F0B';
+    if(cnt >= targetPt){
+      bg = '#FCEBEB'; border = '#E24B4A'; textCol = '#A32D2D';
+    } else if(cnt >= targetPt - 10){
+      bg = '#FAEEDA'; border = '#EF9F27'; textCol = '#854F0B';
+    } else if(cnt > 0){
+      bg = '#E1F5EE'; border = '#1D9E75'; textCol = '#0F6E56';
+    }
+
+    const dayColor = isToday ? 'var(--g)' : isSun ? '#E24B4A' : isSat ? '#378ADD' : 'var(--tx)';
+    const todayRing = isToday ? 'box-shadow:0 0 0 2px var(--g) inset;' : '';
+
+    cells += `<div style="min-height:56px;border-right:.5px solid var(--bd);border-bottom:.5px solid var(--bd);padding:4px;background:${cnt>0?bg:'#fff'};${todayRing}position:relative;">
+      <div style="font-size:11px;font-weight:${isToday?'500':'400'};color:${dayColor};margin-bottom:3px;">${d}</div>
+      ${cnt > 0 ? `<div style="font-size:15px;font-weight:500;color:${textCol};text-align:center;">${cnt}</div>
+      <div style="font-size:8px;color:${textCol};text-align:center;">点</div>` : ''}
+    </div>`;
+  }
+
+  // 末尾の空白
+  const totalCells = firstDay + lastDate;
+  const remainder = totalCells % 7;
+  if(remainder > 0){
+    for(let i = remainder; i < 7; i++){
+      cells += '<div style="min-height:56px;border-right:.5px solid var(--bd);border-bottom:.5px solid var(--bd);"></div>';
+    }
+  }
+
+  grid.innerHTML = cells;
+  const el = document.getElementById('cal-month-total');
+  if(el) el.textContent = monthTotal + ' 点';
+}
+
+build();renderCart();loadLocal();
+document.getElementById('target-disp').textContent = targetPt;
